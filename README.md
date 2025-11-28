@@ -58,37 +58,37 @@ Not a full ATS system (no tracking or multi-round evaluation).
 
 Architecture Diagram :
 
-                    ┌───────────────────────────────┐
-                    │         Streamlit UI           │
-                    │  - Upload resumes              │
-   User ------------▶  - Paste job description       │
-                    │  - Display results             │
-                    └───────────────┬───────────────┘
-                                    │  (HTTP Request)
-                                    ▼
-                    ┌───────────────────────────────┐
-                    │           FastAPI              │
-                    │  /rank endpoint                │
-                    └───────────────┬───────────────┘
-                                    │
-                   ┌────────────────┴────────────────┐
-                   │     Resume Processing Pipeline  │
-                   │---------------------------------│
-                   │ 1. Text Extraction (PDF/DOCX)   │
-                   │ 2. Sentence Embeddings          │
-                   │ 3. Cosine Similarity            │
-                   │ 4. Gemini LLM Scoring           │
-                   │ 5. Final Aggregation            │
-                   └────────────────┬────────────────┘
-                                    │
-                                    ▼
-                    ┌───────────────────────────────┐
-                    │        JSON Response           │
-                    │  - similarity score            │
-                    │  - final score                 │
-                    │  - strengths / weaknesses      │
-                    │  - ranking                     │
-                    └───────────────────────────────┘
+                   ┌───────────────────────────────┐
+                   │         Streamlit UI           │
+                   │  - Upload resumes              │
+                   │  - Paste job description       │
+                   │  - Display results             │
+                   └───────────────┬───────────────┘
+                                   │  (HTTP POST /rank)
+                                   ▼
+                   ┌───────────────────────────────┐
+                   │            FastAPI            │
+                   │         /rank endpoint        │
+                   └───────────────┬───────────────┘
+                                   │
+     ┌─────────────────────────────┴─────────────────────────────┐
+     │                 Resume Processing Pipeline                  │
+     │-------------------------------------------------------------│
+     │ 1. Text Extraction (PDF / DOCX / TXT)                       │
+     │ 2. Sentence Embeddings (MiniLM)                             │
+     │ 3. Cosine Similarity                                        │
+     │ 4. Gemini LLM Scoring (Score + Strengths + Weaknesses)      │
+     │ 5. Final Score Aggregation (Similarity + LLM score)         │
+     └─────────────────────────────┬───────────────────────────────┘
+                                   │
+                                   ▼
+                   ┌───────────────────────────────┐
+                   │         JSON Response          │
+                   │  - similarity score            │
+                   │  - final score                 │
+                   │  - strengths / weaknesses      │
+                   │  - ranking                     │
+                   └───────────────────────────────┘
               
   Tech Stack :
   
