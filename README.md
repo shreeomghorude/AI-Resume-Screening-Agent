@@ -93,41 +93,50 @@ Architecture Diagram :
   Tech Stack :
   
 Frontend:
-       Streamlit/
-       Pandas/
+       Streamlit,
+       Pandas,
        Requests
 
 Backend:
-       FastAPI/
-       Uvicorn/
+       FastAPI,
+       Uvicorn,
        CORS Middleware
 
 AI & NLP:
-       Sentence Transformers (MiniLM)
-       Google Gemini 1.5 Flash
-       Document Parsing
-       pdfplumber
-       python-docx
+       Sentence Transformers (MiniLM),
+       Google Gemini 1.5 Flash,
+       Document Parsing,
+       pdfplumber,
+       python-docx,
        txt decoding
 
 Other:
-      NumPy
-      Virtualenv
+      NumPy,
+      Virtualenv,
       HTTP multipart handling
 
 Setup & Run Instructions:
 
 Backend Setup:
   Navigate to backend folder: cd backend
+  
   Create virtual environment: python -m venv venv
+  
   Activate environment: venv\Scripts\activate
+  
   Install dependencies: pip install -r requirements.txt
+  
   Set Gemini API key: set GEMINI_API_KEY=your_key_here
+  
   Run backend server: uvicorn app.main:app --reload --port 8000
 
 Frontend Setup:
   Open another terminal
+  
   Go to frontend folder: cd frontend
+  
   Install requirements: pip install -r requirements.txt
+  
   Run Streamlit UI: streamlit run streamlit_app.py
+  
   Open browser: http://localhost:8501
