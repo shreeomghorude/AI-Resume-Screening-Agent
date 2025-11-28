@@ -93,13 +93,13 @@ Architecture Diagram :
   Tech Stack :
   
 Frontend:
-       Streamlit
-       Pandas
+       Streamlit/
+       Pandas/
        Requests
 
 Backend:
-       FastAPI
-       Uvicorn
+       FastAPI/
+       Uvicorn/
        CORS Middleware
 
 AI & NLP:
