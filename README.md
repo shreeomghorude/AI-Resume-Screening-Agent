@@ -118,25 +118,27 @@ Other:
 Setup & Run Instructions:
 
 Backend Setup:
-  Navigate to backend folder: cd backend
+
+  1. Navigate to backend folder: cd backend
   
-  Create virtual environment: python -m venv venv
+  2. Create virtual environment: python -m venv venv
   
-  Activate environment: venv\Scripts\activate
+  3. Activate environment: venv\Scripts\activate
   
-  Install dependencies: pip install -r requirements.txt
+  4. Install dependencies: pip install -r requirements.txt
   
-  Set Gemini API key: set GEMINI_API_KEY=your_key_here
+  5. Set Gemini API key: set GEMINI_API_KEY=your_key_here
   
-  Run backend server: uvicorn app.main:app --reload --port 8000
+  6. Run backend server: uvicorn app.main:app --reload --port 8000
 
 Frontend Setup:
-  Open another terminal
+
+  1. Open another terminal
   
-  Go to frontend folder: cd frontend
+  2. Go to frontend folder: cd frontend
   
-  Install requirements: pip install -r requirements.txt
+  3. Install requirements: pip install -r requirements.txt
   
-  Run Streamlit UI: streamlit run streamlit_app.py
+  4. Run Streamlit UI: streamlit run streamlit_app.py
   
-  Open browser: http://localhost:8501
+  5. Open browser: http://localhost:8501
