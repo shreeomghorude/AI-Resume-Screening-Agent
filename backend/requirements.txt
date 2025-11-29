@@ -1,9 +1,7 @@
 fastapi
-uvicorn[standard]
-sentence-transformers
+uvicorn
+python-multipart
 pdfplumber
 python-docx
-openai
+scikit-learn
 numpy
-google-generativeai
-python-multipart
