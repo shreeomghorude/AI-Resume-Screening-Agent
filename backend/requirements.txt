@@ -6,3 +6,4 @@ python-docx
 openai
 numpy
 google-generativeai
+python-multipart
