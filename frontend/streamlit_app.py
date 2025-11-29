@@ -21,15 +21,13 @@ if submitted:
     elif not files:
         st.error("Please upload at least one resume")
     else:
-        # Use local backend for development
-        BACKEND_URL = "http://127.0.0.1:8000"
+        # Your live backend URL
+        BACKEND_URL = "https://ai-resume-screening-agent.onrender.com"
 
         files_payload = []
-        # Streamlit's UploadedFile.read() returns bytes
         for f in files:
-            # Reset the buffer pointer in case file was read earlier
             try:
-                f.seek(0)
+                f.seek(0)  # ensure pointer reset
             except Exception:
                 pass
             content = f.read()
@@ -38,28 +36,32 @@ if submitted:
         data = {"job_description": job_desc}
 
         start_time = time.time()
+
         try:
             with st.spinner("Sending to backend and scoring..."):
                 resp = requests.post(
-                    BACKEND_URL + "/rank", data=data, files=files_payload, timeout=120
+                    BACKEND_URL + "/rank",
+                    data=data,
+                    files=files_payload,
+                    timeout=200
                 )
                 resp.raise_for_status()
                 payload = resp.json()
-            elapsed = time.time() - start_time
 
+            elapsed = time.time() - start_time
             results = payload.get("results", [])
+
             if not results:
-                st.warning("No results returned from backend")
+                st.warning("No results returned from backend.")
             else:
-                # Detailed candidate cards (ranked)
                 st.success(f"Ranking complete — {len(results)} candidate(s) — {elapsed:.1f}s")
+
                 for i, r in enumerate(results):
-                    # defensive get
-                    llm = r.get("llm") or {}
+                    llm = r.get("llm", {})
                     score = r.get("final_score", 0)
                     similarity = r.get("similarity", 0.0)
 
-                    # choose color for score
+                    # Score color formatting
                     if score >= 75:
                         score_color = "#16a34a"  # green
                     elif score >= 45:
@@ -69,41 +71,42 @@ if submitted:
 
                     st.markdown(f"### {i+1}. **{r.get('filename','Unnamed')}**")
                     st.markdown(
-                        f"**Final Score:** <span style='color:{score_color}; font-weight:700;'>{score}</span> &nbsp;&nbsp; "
-                        f"**Similarity:** `{round(similarity,3)}`",
+                        f"**Final Score:** <span style='color:{score_color}; font-weight:700;'>{score}</span> "
+                        f"&nbsp;&nbsp; **Similarity:** `{round(similarity, 3)}`",
                         unsafe_allow_html=True,
                     )
 
-                    # expandable strengths/weaknesses
-                    with st.expander("Strengths", expanded=False):
+                    # Strengths
+                    with st.expander("Strengths"):
                         strengths = llm.get("strengths", [])
                         if strengths:
                             for s in strengths:
                                 st.markdown(f"- {s}")
                         else:
-                            st.markdown("- No strengths generated.")
+                            st.markdown("- No strengths available.")
 
-                    with st.expander("Weaknesses", expanded=False):
+                    # Weaknesses
+                    with st.expander("Weaknesses"):
                         weaknesses = llm.get("weaknesses", [])
                         if weaknesses:
                             for w in weaknesses:
                                 st.markdown(f"- {w}")
                         else:
-                            st.markdown("- No weaknesses generated.")
+                            st.markdown("- No weaknesses available.")
 
-                    # optional: show a short snippet of the resume (first 300 chars)
-                    with st.expander("Resume preview (first 400 chars)"):
-                        preview = r.get("text_preview") or r.get("text", "")[:400]
+                    # Preview resume text (first 400 chars)
+                    with st.expander("Resume Preview (first 400 chars)"):
+                        preview = r.get("text", "")[:400]
                         if preview:
                             st.code(preview)
                         else:
                             st.markdown("No preview available.")
                     st.markdown("---")
 
-                # Summary table and CSV download
+                # Summary table
                 summary_rows = []
                 for r in results:
-                    llm = r.get("llm") or {}
+                    llm = r.get("llm", {})
                     summary_rows.append(
                         {
                             "filename": r.get("filename", ""),
@@ -130,6 +133,7 @@ if submitted:
                 )
 
         except requests.exceptions.RequestException as e:
-            st.error(f"Network / Backend Error: {e}")
+            st.error(f"Network/Backend Error: {e}")
+
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.error(f"Unexpected Error: {e}")
